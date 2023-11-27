@@ -1,0 +1,59 @@
+---
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    container_name: db 
+    environment:
+      MYSQL_DATABASE: 'dbschema'
+      MYSQL_ROOT_PASSWORD: 'trontron'
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  backend:
+    container_name: backend
+    build:
+      context: ./pass
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  # frontend:
+  #   build:
+  #     context: ./ng-pass-crud
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "4200:80"
+  #   depends_on:
+  #     - backend
+      
+  # nginxproxy:
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+  #     - frontend       
+  frontend:
+    container_name: frontend  
+    build:
+      context: ./ng-pass-crud
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./ng-pass-crud/dist:/usr/share/nginx/html
+      - ./ng-pass-crud/nginx.conf:/etc/nginx/nginx.conf
+      - ./ng-pass-crud/mime.types:/etc/nginx/mime.types
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
+...  
