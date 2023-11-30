@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Password } from '../models/password.model';
 
-const baseUrl = 'http://localhost:8080/api/passwords';
+const baseUrl = '/api/passwords';
 
 @Injectable({
   providedIn: 'root'
